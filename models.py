@@ -149,7 +149,7 @@ class Model(
         """
         dtype = next(self.parameters()).dtype
         b, s, _ = tokens.size()
-
+        
         assert self.backbone.caches_are_enabled(), "backbone caches are not enabled"
         curr_backbone_mask = _index_causal_mask(self.backbone_causal_mask, input_pos)
         embeds = self._embed_tokens(tokens)
