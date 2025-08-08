@@ -1,4 +1,4 @@
-from flask import Flask, request, send_file, jsonify
+from flask import Flask, request, send_file, jsonify, after_this_request
 from flask_cors import CORS
 import torch
 import torchaudio
@@ -6,7 +6,9 @@ from generator import load_csm_1b, Segment
 import time
 from datetime import datetime
 import warnings
+from pydub import AudioSegment
 import os
+import io
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))  # /home/ubuntu/csm/customModels
 PROJECT_ROOT = os.path.dirname(BASE_DIR)              # /home/ubuntu/csm
@@ -60,17 +62,33 @@ def tts():
                 context=[context_segment],  # Your reference segment for cloning
                 max_audio_length_ms=max_audio_length_ms
             )
-            end = time.time()
-            print(f"Generation time: {end - start:.2f} seconds",flush=True)
+            inference_time = time.time() - start
+            print(f"Inference generation time: {inference_time:.2f} seconds", flush=True)
 
-        output_dir = os.path.join(PROJECT_ROOT, "voices", "server")
-        timestamp = datetime.now().strftime("%H-%M-%S")
-        output_path = os.path.join(output_dir, f"server_{timestamp}.wav")
-        torchaudio.save(output_path, audio.unsqueeze(0).cpu(), generator.sample_rate)
-        print(f"Saved audio to {output_path}")
+#        buffer = io.BytesIO()
+#        torchaudio.save(buffer, audio.unsqueeze(0).cpu(), generator.sample_rate, format="wav")
+#        buffer.seek(0)
+#        return send_file(buffer, mimetype="audio/wav", as_attachment=True, download_name="output.wav")        
+        
+        wav_io = io.BytesIO()
+        torchaudio.save(wav_io, audio.unsqueeze(0).cpu(), generator.sample_rate, format="wav")
+        wav_io.seek(0)
+        
+        sound = AudioSegment.from_file(wav_io, format="wav")
+        mp3_io = io.BytesIO()
+        sound.export(mp3_io, format="mp3")
+        mp3_io.seek(0)
 
-        return send_file(output_path, mimetype="audio/wav", as_attachment=True, download_name="output.wav")
+        @after_this_request
+        def log_response_time(response):
+            print(f"Finished sending response at {time.time()}, total request took {time.time() - start:.2f} seconds", flush=True)
+            return response
+
+        return send_file(mp3_io, mimetype="audio/mpeg", as_attachment=True, download_name="output.mp3")
     except Exception as e:
+        import traceback
+        tb = traceback.format_exc()
+        print(f"Exception during TTS request:\n{tb}", flush=True)
         return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
