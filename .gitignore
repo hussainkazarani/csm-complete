@@ -1,3 +1,6 @@
+# Other
+/customModels/__pycache__/
+
 # Python
 __pycache__/
 *.py[cod]
