@@ -15,6 +15,7 @@ CORS(app)
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
+print("Loading model and reference segment...")
 generator = load_csm_1b(device=device)  # Model loads ONCE
 
 # ------------- 1. Load and prepare your reference ("cloned") voice once -------------
@@ -25,6 +26,7 @@ REF_TRANSCRIPT = "Hey there, I would really love to talk with you."  # Write the
 ref_audio_tensor, sr = torchaudio.load(REF_AUDIO_PATH)
 ref_audio_tensor = torchaudio.functional.resample(ref_audio_tensor.squeeze(0), orig_freq=sr, new_freq=generator.sample_rate)
 
+print("Loading reference segment...")
 context_segment = Segment(
     text=REF_TRANSCRIPT,
     speaker=0,
