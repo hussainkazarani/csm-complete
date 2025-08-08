@@ -1,6 +1,11 @@
 from generator import load_csm_1b, Segment
 import torchaudio
 import torch
+from datetime import datetime
+import warnings
+
+# Skip Warnings
+warnings.filterwarnings("ignore", category=FutureWarning)
 
 if torch.cuda.is_available():
     device = "cuda"
@@ -32,5 +37,9 @@ audio = generator.generate(
     max_audio_length_ms=5_000,
 )
 
-torchaudio.save("csm_custom_voice.wav", audio.unsqueeze(0).cpu(), generator.sample_rate)
+# Save the new audio
+timestamp = datetime.now().strftime("%H-%M-%S")
+output_path = f"voices/basic/basic_custom_{timestamp}.wav"
+torchaudio.save(output_path, audio.unsqueeze(0).cpu(), generator.sample_rate)
 
+print(f"Saved audio to {output_path}")
