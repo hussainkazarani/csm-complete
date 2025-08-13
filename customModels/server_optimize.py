@@ -49,7 +49,7 @@ def estimate_duration(text: str, wpm=170, buffer_secs=2):
     return int(total_seconds * 1000)
 
 # ------------- 2. Flask endpoint for generating cloned speech from any input text -------------
-@app.route("/tts", methods=["POST"])
+@app.route("/csm-basic", methods=["POST"])
 def tts():
     data = request.get_json(force=True)
     text = data.get("text", "")
