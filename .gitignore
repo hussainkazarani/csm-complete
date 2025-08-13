@@ -35,6 +35,9 @@ ENV/
 
 # Project specific
 .python-version
+models/Llama-3.2-1B-Instruct-Q6_K_L.gguf
+finetuned_model/
+
 # *.wav
 output_*/
 basic_audio.wav

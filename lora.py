@@ -32,7 +32,7 @@ logger = logging.getLogger(__name__)
 
 AUDIO_DIR = "audio_data"
 OUTPUT_DIR = "finetuned_model"
-NUM_EPOCHS = 10
+NUM_EPOCHS = 5
 BATCH_SIZE = 1
 GRADIENT_ACCUMULATION_STEPS = 16
 LEARNING_RATE = 1e-6
