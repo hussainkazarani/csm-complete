@@ -1,5 +1,5 @@
 {
-    "model_path": "models/csm_1b",
+    "model_path": "./finetuned_model",
     "voice_speaker_id": 0,
     "reference_audio": "output0.wav",
     "reference_text": "Ardent in the prosecution of heresy, Cyril auspiciously opened his reign by oppressing the Novatians, the most innocent and harmless of the sectaries."
