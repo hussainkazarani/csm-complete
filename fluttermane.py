@@ -2,9 +2,10 @@ import os
 os.environ.update({
     "OMP_NUM_THREADS": "1",
     "MKL_NUM_THREADS": "1", 
-    "CUDA_LAUNCH_BLOCKING": "1",
-    "PYTORCH_DISABLE_CUDA_GRAPHS": "1",
-    "TOKENIZERS_PARALLELISM": "false"
+    "CUDA_LAUNCH_BLOCKING": "0",  # Changed from 1 to 0
+    "PYTORCH_DISABLE_CUDA_GRAPHS": "0",  # Changed from 1 to 0
+    "TOKENIZERS_PARALLELISM": "false",
+    "NVIDIA_TF32_OVERRIDE": "1"  # Force TF32
 })
 
 import threading
@@ -37,10 +38,11 @@ def model_worker():
 
     print("[Worker] Starting model loading...", flush=True)
     
+    torch.backends.cuda.enable_flash_sdp(True)
+    torch.backends.cuda.enable_mem_efficient_sdp(True)
     torch.backends.cuda.matmul.allow_tf32 = True
     torch.backends.cudnn.allow_tf32 = True
-    torch._inductor.config.triton.cudagraphs = False
-    torch._inductor.config.fx_graph_cache = False
+    torch.set_float32_matmul_precision('high')
 
     csm_model = load_csm_1b_local(config.model_path, "cuda")
     
