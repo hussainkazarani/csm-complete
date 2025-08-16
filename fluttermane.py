@@ -1,11 +1,9 @@
 import os
 os.environ.update({
-    "OMP_NUM_THREADS": "1",
-    "MKL_NUM_THREADS": "1", 
-    "CUDA_LAUNCH_BLOCKING": "0",  # Changed from 1 to 0
-    "PYTORCH_DISABLE_CUDA_GRAPHS": "0",  # Changed from 1 to 0
-    "TOKENIZERS_PARALLELISM": "false",
-    "NVIDIA_TF32_OVERRIDE": "1"  # Force TF32
+    "OMP_NUM_THREADS": "1",  # No CPU thread contention
+    "MKL_NUM_THREADS": "1",  # No Math Kernel Library overhead
+    "CUDA_LAUNCH_BLOCKING": "1",  
+    "PYTORCH_DISABLE_CUDA_GRAPHS": "1",  
 })
 
 import threading
@@ -37,13 +35,10 @@ def model_worker():
     global csm_model, reference_segment
 
     print("[Worker] Starting model loading...", flush=True)
-    
-    torch.backends.cuda.enable_flash_sdp(True)
-    torch.backends.cuda.enable_mem_efficient_sdp(True)
-    torch.backends.cuda.matmul.allow_tf32 = True
-    torch.backends.cudnn.allow_tf32 = True
-    torch.set_float32_matmul_precision('high')
 
+    torch._inductor.config.triton.cudagraphs = False
+    torch._inductor.config.fx_graph_cache = False
+    
     csm_model = load_csm_1b_local(config.model_path, "cuda")
     
     print("[Worker] CSM Model loaded. Starting warm-up...")
@@ -115,6 +110,7 @@ async def websocketEndpoint(websocket: WebSocket):
                     temperature=0.7,
                     topk=40
                 ):
+                print_gpu_memory()
 
                 await websocket.send_bytes(chunk.cpu().numpy().tobytes()) # change to bytes before sending
 
@@ -130,6 +126,11 @@ def verify_environment():
     print(f"[CUDA] Blocking: {os.getenv('CUDA_LAUNCH_BLOCKING')}")
     print(f"[PyTorch] CUDA Graphs: {torch._inductor.config.triton.cudagraphs}")
     print(f"[TF32] MatMul: {torch.backends.cuda.matmul.allow_tf32}")
+
+def print_gpu_memory():
+    allocated = torch.cuda.memory_allocated() / 1024**3
+    reserved = torch.cuda.memory_reserved() / 1024**3
+    print(f"GPU Memory - Allocated: {allocated:.2f}GB, Reserved: {reserved:.2f}GB")
 
 #server intialization
 if __name__ == "__main__":
