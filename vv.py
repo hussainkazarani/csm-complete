@@ -38,16 +38,17 @@ def model_worker():
 
     torch._inductor.config.triton.cudagraphs = False
     torch._inductor.config.fx_graph_cache = False
-    
+    torch.backends.cuda.matmul.allow_tf32 = True
+
     csm_model = load_csm_1b_local(config.model_path, "cuda")
     
     print("[Worker] CSM Model loaded. Starting warm-up...")
 
     for _ in csm_model.generate_stream(
-        text="warm-up " * 10,
+        text="warm-up " * 500,
         speaker=config.voice_speaker_id,
         context=None,
-        max_audio_length_ms=1000,
+        max_audio_length_ms=15000,
         temperature=0.7,
         topk=40
     ):
@@ -135,4 +136,4 @@ def print_gpu_memory():
 #server intialization
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8443)
+    uvicorn.run(app, host="0.0.0.0", port=8000)

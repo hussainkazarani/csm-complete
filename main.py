@@ -107,7 +107,10 @@ loop = asyncio.new_event_loop()
 asyncio.set_event_loop(loop)
 
 # FastAPI
-app = FastAPI()
+app = FastAPI(
+        timeout=300,  # 5 minutes
+        timeout_graceful_shutdown=60
+        )
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 config_manager = ConfigManager()
@@ -1213,4 +1216,4 @@ async def crud_ui(request: Request):
 if __name__ == "__main__":
     import uvicorn
     threading.Thread(target=lambda: asyncio.run(loop.run_forever()), daemon=True).start()
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=8443)
