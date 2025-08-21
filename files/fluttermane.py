@@ -4,7 +4,7 @@ os.environ.update({
     "MKL_NUM_THREADS": "1",  # No Math Kernel Library overhead
     "CUDA_LAUNCH_BLOCKING": "1",  
     "PYTORCH_DISABLE_CUDA_GRAPHS": "1",  
-})
+    })
 
 import threading
 import time
@@ -38,20 +38,19 @@ def model_worker():
 
     torch._inductor.config.triton.cudagraphs = False
     torch._inductor.config.fx_graph_cache = False
-    torch.backends.cuda.matmul.allow_tf32 = True
 
     csm_model = load_csm_1b_local(config.model_path, "cuda")
-    
+
     print("[Worker] CSM Model loaded. Starting warm-up...")
 
     for _ in csm_model.generate_stream(
-        text="warm-up " * 500,
-        speaker=config.voice_speaker_id,
-        context=None,
-        max_audio_length_ms=15000,
-        temperature=0.7,
-        topk=40
-    ):
+            text="warm-up " * 10,
+            speaker=config.voice_speaker_id,
+            context=None,
+            max_audio_length_ms=1000,
+            temperature=0.7,
+            topk=40
+            ):
         pass
 
     print("[Worker] Model loading and Warm-up complete!", flush=True)
@@ -110,8 +109,7 @@ async def websocketEndpoint(websocket: WebSocket):
                     max_audio_length_ms=8000,
                     temperature=0.7,
                     topk=40
-                ):
-                print_gpu_memory()
+                    ):
 
                 await websocket.send_bytes(chunk.cpu().numpy().tobytes()) # change to bytes before sending
 
@@ -128,12 +126,7 @@ def verify_environment():
     print(f"[PyTorch] CUDA Graphs: {torch._inductor.config.triton.cudagraphs}")
     print(f"[TF32] MatMul: {torch.backends.cuda.matmul.allow_tf32}")
 
-def print_gpu_memory():
-    allocated = torch.cuda.memory_allocated() / 1024**3
-    reserved = torch.cuda.memory_reserved() / 1024**3
-    print(f"GPU Memory - Allocated: {allocated:.2f}GB, Reserved: {reserved:.2f}GB")
-
 #server intialization
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=8443)

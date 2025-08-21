@@ -7,8 +7,8 @@ let isLoading = false;
 document.addEventListener('DOMContentLoaded', async () => {
   await populateAudioDevices();
 
-//  ws = new WebSocket(`ws://${window.location.host}/ws`);
-  ws = new WebSocket(`wss://csm-stream.hussainkazarani.site/ws`);
+  ws = new WebSocket(`ws://${window.location.host}/ws`);
+//  ws = new WebSocket(`wss://csm-stream.hussainkazarani.site/ws`);
 
   ws.onopen = () => {
     console.log("WebSocket connected, requesting saved config...");
