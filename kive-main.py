@@ -123,21 +123,7 @@ def preprocess_text_for_tts(text):
     cleaned_text = re.sub(r'([.,!?])(\S)', r'\1 \2', cleaned_text)
     return cleaned_text.strip()
 
-# Add this function to your server code
-def split_long_text(text, max_words=100):
-    """
-    Split long text into chunks that the TTS model can handle
-    """
-    words = text.split()
-    chunks = []
-    
-    for i in range(0, len(words), max_words):
-        chunk = ' '.join(words[i:i + max_words])
-        chunks.append(chunk)
-    
-    return chunks
-
-# ----- Modified Audio Generation Function -----
+# ----- Audio Generation Function -----
 async def audio_generation(text: str, websocket: WebSocket):
     global is_speaking, reference_segments
 
@@ -145,7 +131,7 @@ async def audio_generation(text: str, websocket: WebSocket):
         await websocket.send_json({
             "type": "error",
             "message": "Audio generation busy, please wait"
-        })
+            })
         return
 
     try:
@@ -154,99 +140,75 @@ async def audio_generation(text: str, websocket: WebSocket):
         await websocket.send_json({
             "type": "audio_status",
             "status": "generating"
-        })
-
-        # Preprocess text
-        print(f"[Preprocessing] Original text length: {len(text)}")
-        text = preprocess_text_for_tts(text.lower())
-        print(f"[Preprocessing] Cleaned text length: {len(text)}")
-
-        # Split long text into chunks
-        text_chunks = split_long_text(text, max_words=80)
-        print(f"[Preprocessing] Split into {len(text_chunks)} chunks")
-        
-        if len(text_chunks) > 1:
-            await websocket.send_json({
-                "type": "status",
-                "message": f"Long text detected. Splitting into {len(text_chunks)} parts..."
             })
 
-        # Process each chunk
-        for i, chunk in enumerate(text_chunks):
-            if len(text_chunks) > 1:
-                await websocket.send_json({
-                    "type": "status",
-                    "message": f"Processing part {i+1}/{len(text_chunks)}..."
-                })
+        # ----- ADD PREPROCESSING HERE -----
+        print(f"[Preprocessing] Original text: {text}", flush=True)
+        text = preprocess_text_for_tts(text.lower())
+        print(f"[Preprocessing] Cleaned text: {text}", flush=True)
+        # ----------------------------------
 
-            # Estimate audio length for better streaming
-            words = chunk.split()
-            avg_wpm = 100
-            words_per_second = avg_wpm / 60
-            estimated_seconds = len(words) / words_per_second
-            max_audio_length_ms = int(estimated_seconds * 1000)
+        # Estimate audio length for better streaming
+        words = text.split()
+        avg_wpm = 100
+        words_per_second = avg_wpm / 60
+        estimated_seconds = len(words) / words_per_second
+        max_audio_length_ms = int(estimated_seconds * 1000)
 
-            # Send request to model thread
-            model_queue.put((
-                chunk,
-                config.voice_speaker_id,
-                reference_segments,
-                max_audio_length_ms,
-                0.8,  # temperature
-                50    # topk
+        # Send request to model thread
+        model_queue.put((
+            text,
+            config.voice_speaker_id,
+            reference_segments,
+            max_audio_length_ms,
+            0.8,  # temperature
+            50    # topk
             ))
 
-            chunk_counter = 0
-            first_chunk_sent = False
+        chunk_counter = 0
+        first_chunk_sent = False
 
-            # Stream audio chunks in real-time
-            while True:
-                try:
-                    result = model_result_queue.get(timeout=1.0)
+        # Stream audio chunks in real-time
+        while True:
+            try:
+                result = model_result_queue.get(timeout=1.0)
 
-                    if result is None:  # End of stream for this chunk
-                        break
+                if result is None:  # End of stream
+                    break
 
-                    if isinstance(result, Exception):
-                        raise result
+                if isinstance(result, Exception):
+                    raise result
 
-                    chunk_counter += 1
+                chunk_counter += 1
 
-                    # Convert to numpy and send
-                    chunk_array = result.cpu().numpy().astype(np.float32)
+                # Convert to numpy and send
+                chunk_array = result.cpu().numpy().astype(np.float32)
 
-                    # Send first chunk status
-                    if not first_chunk_sent:
-                        await websocket.send_json({
-                            "type": "audio_status",
-                            "status": "first_chunk"
-                        })
-                        first_chunk_sent = True
-
-                    # Send audio chunk
+                # Send first chunk status
+                if not first_chunk_sent:
                     await websocket.send_json({
-                        "type": "audio_chunk",
-                        "audio": chunk_array.tolist(),
-                        "sample_rate": generator.sample_rate,
-                        "chunk_num": chunk_counter,
-                        "part": f"{i+1}/{len(text_chunks)}" if len(text_chunks) > 1 else None
+                        "type": "audio_status",
+                        "status": "first_chunk"
+                        })
+                    first_chunk_sent = True
+
+                # Send audio chunk
+                await websocket.send_json({
+                    "type": "audio_chunk",
+                    "audio": chunk_array.tolist(),
+                    "sample_rate": generator.sample_rate,
+                    "chunk_num": chunk_counter
                     })
 
-                except queue.Empty:
-                    continue
-
-        # All chunks processed
-        await websocket.send_json({
-            "type": "status",
-            "message": "All parts processed successfully"
-        })
+            except queue.Empty:
+                continue
 
     except Exception as e:
         print(f"[Audio Generation] Error: {e}", flush=True)
         await websocket.send_json({
             "type": "error",
             "message": f"Generation failed: {str(e)}"
-        })
+            })
 
     finally:
         is_speaking = False
@@ -256,7 +218,7 @@ async def audio_generation(text: str, websocket: WebSocket):
         await websocket.send_json({
             "type": "audio_status",
             "status": "complete"
-        })
+            })
 
 # ----- Load Reference Audio -----
 def load_reference_segments():
