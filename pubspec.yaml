@@ -38,6 +38,10 @@ dependencies:
     audioplayers: ^6.5.0
     path_provider: ^2.1.5
     flutter_launcher_icons: ^0.14.4
+    bubble: ^1.2.1
+    web_socket_channel: ^3.0.3
+    flutter_sound: ^9.28.0
+    just_audio: ^0.10.4
 
 flutter_icons:
     ios: true

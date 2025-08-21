@@ -115,21 +115,24 @@ class _CSMBasicState extends State<CSMBasic> {
   //------------ UI ------------
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: customAppBar(),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            customTextHeader(),
-            const SizedBox(height: 16),
-            customTextField(),
-            const SizedBox(height: 16),
-            customAudio(),
-            const SizedBox(height: 16),
-            customButton(),
-          ],
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Scaffold(
+        appBar: customAppBar(),
+        body: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              customTextHeader(),
+              const SizedBox(height: 16),
+              customTextField(),
+              const SizedBox(height: 16),
+              customAudio(),
+              const SizedBox(height: 16),
+              customButton(),
+            ],
+          ),
         ),
       ),
     );
@@ -139,7 +142,7 @@ class _CSMBasicState extends State<CSMBasic> {
   AppBar customAppBar() {
     return AppBar(
       title: const Text(
-        "Voice Cloner TTS",
+        "Blocking CSM",
         style: TextStyle(color: Colors.white, fontSize: 25),
       ),
       backgroundColor: Colors.black.withValues(alpha: 0.3),
@@ -161,6 +164,7 @@ class _CSMBasicState extends State<CSMBasic> {
       textInputAction: TextInputAction.done,
       autocorrect: false,
       enableSuggestions: false,
+      keyboardType: TextInputType.text,
       decoration: InputDecoration(
         hintText: "Type something...",
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
