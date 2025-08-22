@@ -1,3 +1,5 @@
+models/llama32-1b.gguf
+
 # Python
 __pycache__/
 *.py[cod]
