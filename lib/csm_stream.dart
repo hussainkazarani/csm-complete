@@ -1,7 +1,7 @@
 import 'package:bubble/bubble.dart';
 import 'package:csm_app/messages.dart';
-import 'package:csm_app/stream_logic.dart';
 import 'package:flutter/material.dart';
+import 'stream_logic.dart';
 
 class CSMStream extends StatefulWidget {
   const CSMStream({super.key});
@@ -14,28 +14,75 @@ class _CSMStreamState extends State<CSMStream> {
   final streamLogic = StreamLogic();
   final TextEditingController _controller = TextEditingController();
   List<Message> messages = [];
+  bool _isGeneratingAudio = false;
+  String _currentMessage = '';
+  bool _isError = false;
+
+  @override
+  void initState() {
+    super.initState();
+    streamLogic.connect(
+      onMessage: handleNewMessage,
+      onStatus: handleStatusUpdate,
+      onError: handleError,
+    );
+  }
+
+  @override
+  void dispose() {
+    streamLogic.disconnect();
+    super.dispose();
+  }
 
   void sendText(String text) {
     if (text.trim().isEmpty) return;
     _controller.clear();
 
+    // Add user message immediately
     setState(() {
-      messages.add(Message(text: text, isUser: true));
+      messages.add(Message(text: text, type: MessageType.user));
     });
 
+    // Send to server
     streamLogic.sendText(text);
   }
 
-  @override
-  void initState() {
-    super.initState();
-    streamLogic.connect(); // Connect once at the start
+  void handleNewMessage(Message message) {
+    setState(() {
+      if (message.type == MessageType.aiText) {
+        _isGeneratingAudio = true;
+        _currentMessage = 'Generating audio...';
+        _isError = false;
+      }
+      messages.add(message);
+    });
   }
 
-  @override
-  void dispose() {
-    streamLogic.disconnect(); // Clean up on exit
-    super.dispose();
+  void handleStatusUpdate(String status) {
+    setState(() {
+      _currentMessage = status;
+      _isError = false;
+
+      // Handle different status messages
+      if (status.contains('complete') || status.isEmpty) {
+        _isGeneratingAudio = false;
+        _currentMessage = '';
+      } else if (status.contains('Generating audio') ||
+          status.contains('Processing')) {
+        _isGeneratingAudio = true;
+      } else if (status.contains('Thinking')) {
+        _isGeneratingAudio =
+            false; // Thinking doesn't mean audio is generating yet
+      }
+    });
+  }
+
+  void handleError(String error) {
+    setState(() {
+      _currentMessage = error;
+      _isError = true;
+      _isGeneratingAudio = false;
+    });
   }
 
   @override
@@ -51,21 +98,42 @@ class _CSMStreamState extends State<CSMStream> {
             children: [
               Expanded(
                 child: ListView.builder(
-                  itemCount: messages.length,
+                  itemCount:
+                      messages.length + (_currentMessage.isNotEmpty ? 1 : 0),
                   itemBuilder: (context, index) {
-                    final message = messages[index];
-                    if (message.isUser) {
-                      return userBubble(context, message.text);
+                    if (index < messages.length) {
+                      final message = messages[index];
+                      return _buildMessageBubble(context, message);
                     } else {
-                      return aiBubble(context, message.text);
+                      if (_isError) errorBubble(context, _currentMessage);
                     }
                   },
                 ),
               ),
+              if (_isGeneratingAudio) loadingAudio(),
               chatRow(),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildMessageBubble(BuildContext context, Message message) {
+    switch (message.type) {
+      case MessageType.user:
+        return userBubble(context, message.text);
+      case MessageType.aiText:
+        return aiBubble(context, message.text);
+    }
+  }
+
+  Padding loadingAudio() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: LinearProgressIndicator(
+        backgroundColor: Colors.grey[300],
+        valueColor: AlwaysStoppedAnimation<Color>(Colors.deepPurple),
       ),
     );
   }
@@ -118,7 +186,7 @@ class _CSMStreamState extends State<CSMStream> {
     );
   }
 
-  Bubble userBubble(BuildContext context, String text) {
+  Widget userBubble(BuildContext context, String text) {
     return Bubble(
       alignment: Alignment.topRight,
       nip: BubbleNip.rightTop,
@@ -135,7 +203,7 @@ class _CSMStreamState extends State<CSMStream> {
     );
   }
 
-  Bubble aiBubble(BuildContext context, String text) {
+  Widget aiBubble(BuildContext context, String text) {
     return Bubble(
       alignment: Alignment.topLeft,
       nip: BubbleNip.leftTop,
@@ -144,8 +212,64 @@ class _CSMStreamState extends State<CSMStream> {
       nipHeight: 15,
       color: Color.fromRGBO(212, 234, 244, 1.0),
       padding: BubbleEdges.all(12),
-      margin: BubbleEdges.only(right: MediaQuery.of(context).size.width * 0.10),
+      margin: BubbleEdges.only(
+        right: MediaQuery.of(context).size.width * 0.10,
+        bottom: 15,
+      ),
       child: Text(text),
+    );
+  }
+
+  Widget statusBubble(BuildContext context, String text) {
+    return Bubble(
+      alignment: Alignment.center,
+      nip: BubbleNip.no,
+      color: Colors.grey[200],
+      padding: const BubbleEdges.all(12),
+      margin: const BubbleEdges.only(bottom: 15),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const SizedBox(
+            width: 16,
+            height: 16,
+            child: CircularProgressIndicator(strokeWidth: 2),
+          ),
+          const SizedBox(width: 8),
+          Text(
+            text,
+            style: const TextStyle(
+              fontStyle: FontStyle.italic,
+              color: Colors.grey,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget errorBubble(BuildContext context, String text) {
+    return Bubble(
+      alignment: Alignment.center,
+      nip: BubbleNip.no,
+      color: const Color.fromRGBO(255, 200, 200, 1.0),
+      padding: const BubbleEdges.all(12),
+      margin: const BubbleEdges.only(bottom: 10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Icon(
+            Icons.error,
+            color: Color.fromARGB(255, 169, 46, 37),
+            size: 16,
+          ),
+          const SizedBox(width: 8),
+          Text(
+            text,
+            style: const TextStyle(color: Color.fromARGB(255, 169, 46, 37)),
+          ),
+        ],
+      ),
     );
   }
 
