@@ -1,51 +1,51 @@
-models/llama32-1b.gguf
+csm-stream/models/llama32-1b.gguf
 
 # Python
-__pycache__/
-*.py[cod]
-*$py.class
-*.so
-.Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
+csm-stream/__pycache__/
+csm-stream/*.py[cod]
+csm-stream/*$py.class
+csm-stream/*.so
+csm-stream/.Python
+csm-stream/build/
+csm-stream/develop-eggs/
+csm-stream/dist/
+csm-stream/downloads/
+csm-stream/eggs/
+csm-stream/.eggs/
+csm-stream/lib/
+csm-stream/lib64/
+csm-stream/parts/
+csm-stream/sdist/
+csm-stream/var/
+csm-stream/wheels/
+csm-stream/*.egg-info/
+csm-stream/.installed.cfg
+csm-stream/*.egg
 
 # Virtual Environment
-.env
-.venv
-env/
-venv/
-ENV/
+csm-stream/.env
+csm-stream/.venv
+csm-stream/env/
+csm-stream/venv/
+csm-stream/ENV/
 
 # IDE
-.idea/
-.vscode/
-*.swp
-*.swo
+csm-stream/.idea/
+csm-stream/.vscode/
+csm-stream/*.swp
+csm-stream/*.swo
 
 # Project specific
-.python-version
-models/Llama-3.2-1B-Instruct-Q6_K_L.gguf
-finetuned_model/
+csm-stream/.python-version
+csm-stream/models/Llama-3.2-1B-Instruct-Q6_K_L.gguf
+csm-stream/finetuned_model/
 
-# *.wav
-output_*/
-basic_audio.wav
-full_conversation.wav
-context_audio.wav
+*.wav
+csm-stream/output_*/
+csm-stream/basic_audio.wav
+csm-stream/full_conversation.wav
+csm-stream/context_audio.wav
 
 # Model files
-*.pt
-*.ckpt
+csm-stream/*.pt
+csm-stream/*.ckpt
