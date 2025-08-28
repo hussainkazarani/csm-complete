@@ -49,3 +49,53 @@ csm-stream/context_audio.wav
 # Model files
 csm-stream/*.pt
 csm-stream/*.ckpt
+
+# Other
+csm-basic/customModels/__pycache__/
+
+# Python
+csm-basic/__pycache__/
+csm-basic/*.py[cod]
+csm-basic/*$py.class
+csm-basic/*.so
+csm-basic/.Python
+csm-basic/build/
+csm-basic/develop-eggs/
+csm-basic/dist/
+csm-basic/downloads/
+csm-basic/eggs/
+csm-basic/.eggs/
+csm-basic/lib/
+csm-basic/lib64/
+csm-basic/parts/
+csm-basic/sdist/
+csm-basic/var/
+csm-basic/wheels/
+csm-basic/*.egg-info/
+csm-basic/.installed.cfg
+csm-basic/*.egg
+
+# Virtual Environment
+csm-basic/.env
+csm-basic/.venv
+csm-basic/env/
+csm-basic/venv/
+csm-basic/ENV/
+
+# IDE
+csm-basic/.idea/
+csm-basic/.vscode/
+csm-basic/*.swp
+csm-basic/*.swo
+
+# Project specific
+csm-basic/.python-version
+*.wav
+csm-basic/output_*/
+csm-basic/basic_audio.wav
+csm-basic/full_conversation.wav
+csm-basic/context_audio.wav
+
+# Model files
+csm-basic/*.pt
+csm-basic/*.ckpt
