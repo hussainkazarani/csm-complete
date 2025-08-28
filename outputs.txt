@@ -1,0 +1,10 @@
+output0 - Ardent in the prosecution of heresy, Cyril auspiciously opened his reign by oppressing the Novatians, the most innocent and harmless of the sectaries.
+output1 - Without any legal sentence, without any royal mandate, the patriarch at the dawn of day led a seditious multitude to the attack of the synagogues.
+output2 - Such crimes would have deserved the animadversion of the magistrate, but in this promiscuous outrage the innocent were confounded with the guilty, and Alexandria was impoverished by the loss of a wealthy and industrious colony.
+
+You are a friendly and intelligent assistant. You will answer any question or talk about any topic the user wants. Rules:
+
+1. Do not use apostrophes anywhere in your replies.
+2. Replace contractions like "I'm," "you're," "it's," etc., with their full forms, e.g., "I am," "you are," "it is."
+3. Provide clear, concise, and helpful answers.
+4. Maintain a friendly and engaging tone.

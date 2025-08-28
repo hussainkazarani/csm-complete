@@ -1,0 +1,202 @@
+2025-08-13 17:00:44,627 - __main__ - INFO - Loading CSM model: sesame/csm-1b
+2025-08-13 17:01:10,368 - __main__ - ERROR - Failed to initialize codebook_embedding from Mimi: 'SplitResidualVectorQuantizer' object has no attribute 'codebooks'
+2025-08-13 17:01:10,377 - __main__ - INFO - Falling back to random init for codebook_embedding
+2025-08-13 17:01:10,378 - __main__ - INFO - Applying LoRA to model...
+2025-08-13 17:01:22,817 - __main__ - INFO - Transcribing audio files in: audio_data
+2025-08-13 17:01:26,088 - __main__ - INFO - Transcribed: 1673-143397-0019.wav -> the past he regretted he was discontented with the present and the future he had reason to dread the oriental bishops successively disengaged their cause from his unpopular name and each day decreased the number of the schismatics who revered nestorius as the confessor of the faith
+2025-08-13 17:01:26,934 - __main__ - INFO - Transcribed: 1673-143397-0011.wav -> nestorius who depended on the near approach of his eastern friends persisted like his predecessor chrysostom to disclaim the jurisdiction and to disobey the summons of his enemies they hastened his trial and his accuser presided in the seat of judgment
+2025-08-13 17:01:27,712 - __main__ - INFO - Transcribed: 1673-143397-0010.wav -> the vanity of kellestine was flattered by the appeal and the partial version of a monk decided the faith of the pope who with his latin clergy was ignorant of the language the arts and the theology of the greeks
+2025-08-13 17:01:28,281 - __main__ - INFO - Transcribed: 1673-143397-0018.wav -> At the same time, every avenue of the throne was assaulted with gold.
+2025-08-13 17:01:28,842 - __main__ - INFO - Transcribed: 1673-143397-0009.wav -> "'But the Vatican received with open arms the messengers of Egypt.'
+2025-08-13 17:01:29,527 - __main__ - INFO - Transcribed: 1673-143397-0001.wav -> Without any legal sentence, without any royal mandate, the patriarch at the dawn of the day led a seditious multitude to the attack of the synagogues.
+2025-08-13 17:01:30,285 - __main__ - INFO - Transcribed: 1673-143397-0004.wav -> Orestes complained, but his just complaints were too quickly forgotten by the ministers of Theodosius, and too deeply remembered by a priest who affected to pardon and continued to hate the prefect of Egypt.
+2025-08-13 17:01:30,892 - __main__ - INFO - Transcribed: 1673-143397-0015.wav -> Return to your provinces, and may your private virtues repair the mischief and scandal of your meeting.
+2025-08-13 17:01:31,578 - __main__ - INFO - Transcribed: 1673-143397-0014.wav -> During a busy period of three months, the emperor tried every method except the most effectual means of indifference and contempt to reconcile this theological quarrel.
+2025-08-13 17:01:32,153 - __main__ - INFO - Transcribed: 1673-143397-0008.wav -> At these blasphemous sounds, the pillars of the sanctuary were shaken,
+2025-08-13 17:01:33,046 - __main__ - INFO - Transcribed: 1673-143397-0020.wav -> a wandering tribe of the blemys or nubians invaded his solitary prison in their retreat they dismissed a crowd of useless captives but no sooner had nasturius reached the banks of the nile than he would gladly have escaped from a roman and orthodox city to the milder servitude of the savages
+2025-08-13 17:01:33,922 - __main__ - INFO - Transcribed: 1673-143397-0016.wav -> the feeble son of arcadius was alternately swayed by his wife and sister by the eunuchs and women of the palace superstition and avarice were their ruling passions and the orthodox chiefs were assiduous in their endeavors to alarm the former and to gratify the latter
+2025-08-13 17:01:34,648 - __main__ - INFO - Transcribed: 1673-143397-0005.wav -> a rumour was spread among the christians that the daughter of theon was the only obstacle to the reconciliation of the prefect and the archbishop and that obstacle was speedily removed
+2025-08-13 17:01:35,346 - __main__ - INFO - Transcribed: 1673-143397-0006.wav -> which oppressed the metropolitans of Europe and Asia, invaded the provinces of Antioch and Alexandria, and measured their diocese by the limits of the empire.
+2025-08-13 17:01:36,132 - __main__ - INFO - Transcribed: 1673-143397-0002.wav -> such crimes would have deserved the animadversion of the magistrate but in this promiscuous outrage the innocent were confounded with the guilty and alexandria was impoverished by the loss of a wealthy and industrious colony
+2025-08-13 17:01:36,784 - __main__ - INFO - Transcribed: 1673-143397-0017.wav -> But in this awful moment of the danger of the church, their vow was superseded by a more sublime and indispensable duty.
+2025-08-13 17:01:37,463 - __main__ - INFO - Transcribed: 1673-143397-0000.wav -> ardent in the prosecution of heresy kirill auspiciously opened his reign by oppressing the novations the most innocent and harmless of the sectaries
+2025-08-13 17:01:38,184 - __main__ - INFO - Transcribed: 1673-143397-0003.wav -> the zeal of carol exposed him to the penalties of the julian law but in a feeble government and a superstitious age he was secure of impunity and even of praise
+2025-08-13 17:01:38,895 - __main__ - INFO - Transcribed: 1673-143397-0012.wav -> Sixty-eight bishops, twenty-two of metropolitan rank, defended his cause by a modest and temperate protest. They were excluded from the counsels of their brethren.
+2025-08-13 17:01:39,550 - __main__ - INFO - Transcribed: 1673-143397-0013.wav -> By the vigilance of Memnon, the churches were shut against them, and a strong garrison was thrown into the cathedral.
+2025-08-13 17:01:40,161 - __main__ - INFO - Transcribed: 1673-143397-0007.wav -> "'Exterminate with me the heretics, and with you I will exterminate the Persians.'
+2025-08-13 17:01:40,162 - __main__ - INFO - Transcribed 21 audio files
+2025-08-13 17:01:40,174 - __main__ - INFO - Dataset created with 21 samples
+2025-08-13 17:01:40,175 - __main__ - INFO - Starting finetuning process
+2025-08-13 17:01:40,251 - __main__ - INFO - Calculating initial validation loss...
+2025-08-13 17:02:06,741 - __main__ - INFO - Initial validation loss: 12.245856
+2025-08-13 17:02:06,741 - __main__ - INFO - Starting epoch 1/5
+2025-08-13 17:02:25,985 - __main__ - INFO - Calculating validation loss at step 0...
+2025-08-13 17:02:36,887 - __main__ - INFO - Validation loss: 12.245856
+2025-08-13 17:02:44,862 - __main__ - INFO - Calculating validation loss at end of epoch 1...
+2025-08-13 17:02:55,401 - __main__ - INFO - Epoch 1 validation loss: 12.245734
+2025-08-13 17:03:04,424 - __main__ - INFO - Saved checkpoint to finetuned_model/checkpoint-epoch-1
+2025-08-13 17:03:04,424 - __main__ - INFO - Starting epoch 2/5
+2025-08-13 17:03:31,618 - __main__ - INFO - Calculating validation loss at end of epoch 2...
+2025-08-13 17:03:42,189 - __main__ - INFO - Epoch 2 validation loss: 12.245133
+2025-08-13 17:03:51,117 - __main__ - INFO - Saved checkpoint to finetuned_model/checkpoint-epoch-2
+2025-08-13 17:03:51,118 - __main__ - INFO - Starting epoch 3/5
+2025-08-13 17:04:18,603 - __main__ - INFO - Calculating validation loss at end of epoch 3...
+2025-08-13 17:04:29,448 - __main__ - INFO - Epoch 3 validation loss: 12.243105
+2025-08-13 17:04:38,417 - __main__ - INFO - Saved checkpoint to finetuned_model/checkpoint-epoch-3
+2025-08-13 17:04:38,418 - __main__ - INFO - Starting epoch 4/5
+2025-08-13 17:05:06,449 - __main__ - INFO - Calculating validation loss at end of epoch 4...
+2025-08-13 17:05:17,129 - __main__ - INFO - Epoch 4 validation loss: 12.241545
+2025-08-13 17:05:26,098 - __main__ - INFO - Saved checkpoint to finetuned_model/checkpoint-epoch-4
+2025-08-13 17:05:26,099 - __main__ - INFO - Starting epoch 5/5
+2025-08-13 17:05:53,715 - __main__ - INFO - Calculating validation loss at end of epoch 5...
+2025-08-13 17:06:04,503 - __main__ - INFO - Epoch 5 validation loss: 12.239511
+2025-08-13 17:06:13,534 - __main__ - INFO - Saved checkpoint to finetuned_model/checkpoint-epoch-5
+2025-08-13 17:06:23,884 - __main__ - INFO - Final validation loss: 12.233474
+2025-08-13 17:06:32,141 - __main__ - INFO - Finetuning complete! LoRA-based model saved to finetuned_model/model_lora.safetensors
+2025-08-13 17:06:32,141 - __main__ - INFO - Merging LoRA weights into the base model...
+2025-08-13 17:06:32,163 - __main__ - INFO - Replacing LoRALinear modules with plain nn.Linear...
+2025-08-13 17:06:52,328 - __main__ - INFO - LoRA-merged & replaced model saved to finetuned_model/model.safetensors
+2025-08-13 17:06:55,078 - __main__ - INFO - Final training visualization saved to finetuned_model/training_metrics_final.png
+2025-08-13 17:06:55,097 - __main__ - INFO - Finetuning completed successfully!
+2025-08-19 05:12:58,408 - __main__ - INFO - Loading CSM model: sesame/csm-1b
+2025-08-19 05:14:23,486 - __main__ - ERROR - Failed to initialize codebook_embedding from Mimi: 'SplitResidualVectorQuantizer' object has no attribute 'codebooks'
+2025-08-19 05:14:23,494 - __main__ - INFO - Falling back to random init for codebook_embedding
+2025-08-19 05:14:23,494 - __main__ - INFO - Applying LoRA to model...
+2025-08-19 05:14:31,242 - __main__ - INFO - Transcribing audio files in: audio_data
+2025-08-19 05:14:45,056 - __main__ - INFO - Transcribed: 1673-143397-0012.wav -> Sixty-eight bishops, twenty-two of metropolitan rank, defended his cause by a modest and temperate protest. They were excluded from the counsels of their brethren.
+2025-08-19 05:14:45,803 - __main__ - INFO - Transcribed: 1673-143397-0015.wav -> Return to your provinces, and may your private virtues repair the mischief and scandal of your meeting.
+2025-08-19 05:14:46,682 - __main__ - INFO - Transcribed: 1673-143397-0010.wav -> the vanity of kellestine was flattered by the appeal and the partial version of a monk decided the faith of the pope who with his latin clergy was ignorant of the language the arts and the theology of the greeks
+2025-08-19 05:14:47,397 - __main__ - INFO - Transcribed: 1673-143397-0009.wav -> "'But the Vatican received with open arms the messengers of Egypt.'
+2025-08-19 05:14:48,228 - __main__ - INFO - Transcribed: 1673-143397-0003.wav -> the zeal of carol exposed him to the penalties of the julian law but in a feeble government and a superstitious age he was secure of impunity and even of praise
+2025-08-19 05:14:49,155 - __main__ - INFO - Transcribed: 1673-143397-0011.wav -> nestorius who depended on the near approach of his eastern friends persisted like his predecessor chrysostom to disclaim the jurisdiction and to disobey the summons of his enemies they hastened his trial and his accuser presided in the seat of judgment
+2025-08-19 05:14:49,991 - __main__ - INFO - Transcribed: 1673-143397-0005.wav -> a rumour was spread among the christians that the daughter of theon was the only obstacle to the reconciliation of the prefect and the archbishop and that obstacle was speedily removed
+2025-08-19 05:14:50,800 - __main__ - INFO - Transcribed: 1673-143397-0001.wav -> Without any legal sentence, without any royal mandate, the patriarch at the dawn of the day led a seditious multitude to the attack of the synagogues.
+2025-08-19 05:14:51,574 - __main__ - INFO - Transcribed: 1673-143397-0017.wav -> But in this awful moment of the danger of the church, their vow was superseded by a more sublime and indispensable duty.
+2025-08-19 05:14:52,436 - __main__ - INFO - Transcribed: 1673-143397-0004.wav -> Orestes complained, but his just complaints were too quickly forgotten by the ministers of Theodosius, and too deeply remembered by a priest who affected to pardon and continued to hate the prefect of Egypt.
+2025-08-19 05:14:53,320 - __main__ - INFO - Transcribed: 1673-143397-0002.wav -> such crimes would have deserved the animadversion of the magistrate but in this promiscuous outrage the innocent were confounded with the guilty and alexandria was impoverished by the loss of a wealthy and industrious colony
+2025-08-19 05:14:54,284 - __main__ - INFO - Transcribed: 1673-143397-0016.wav -> the feeble son of arcadius was alternately swayed by his wife and sister by the eunuchs and women of the palace superstition and avarice were their ruling passions and the orthodox chiefs were assiduous in their endeavors to alarm the former and to gratify the latter
+2025-08-19 05:14:55,035 - __main__ - INFO - Transcribed: 1673-143397-0007.wav -> "'Exterminate with me the heretics, and with you I will exterminate the Persians.'
+2025-08-19 05:14:55,815 - __main__ - INFO - Transcribed: 1673-143397-0013.wav -> By the vigilance of Memnon, the churches were shut against them, and a strong garrison was thrown into the cathedral.
+2025-08-19 05:14:56,828 - __main__ - INFO - Transcribed: 1673-143397-0020.wav -> a wandering tribe of the blemys or nubians invaded his solitary prison in their retreat they dismissed a crowd of useless captives but no sooner had nasturius reached the banks of the nile than he would gladly have escaped from a roman and orthodox city to the milder servitude of the savages
+2025-08-19 05:14:57,677 - __main__ - INFO - Transcribed: 1673-143397-0014.wav -> During a busy period of three months, the emperor tried every method except the most effectual means of indifference and contempt to reconcile this theological quarrel.
+2025-08-19 05:14:58,486 - __main__ - INFO - Transcribed: 1673-143397-0000.wav -> ardent in the prosecution of heresy kirill auspiciously opened his reign by oppressing the novations the most innocent and harmless of the sectaries
+2025-08-19 05:14:59,206 - __main__ - INFO - Transcribed: 1673-143397-0008.wav -> At these blasphemous sounds, the pillars of the sanctuary were shaken,
+2025-08-19 05:15:00,035 - __main__ - INFO - Transcribed: 1673-143397-0006.wav -> which oppressed the metropolitans of Europe and Asia, invaded the provinces of Antioch and Alexandria, and measured their diocese by the limits of the empire.
+2025-08-19 05:15:01,004 - __main__ - INFO - Transcribed: 1673-143397-0019.wav -> the past he regretted he was discontented with the present and the future he had reason to dread the oriental bishops successively disengaged their cause from his unpopular name and each day decreased the number of the schismatics who revered nestorius as the confessor of the faith
+2025-08-19 05:15:01,728 - __main__ - INFO - Transcribed: 1673-143397-0018.wav -> At the same time, every avenue of the throne was assaulted with gold.
+2025-08-19 05:15:01,729 - __main__ - INFO - Transcribed 21 audio files
+2025-08-19 05:15:01,741 - __main__ - INFO - Dataset created with 21 samples
+2025-08-19 05:15:01,741 - __main__ - INFO - Starting finetuning process
+2025-08-19 05:15:01,781 - __main__ - INFO - Calculating initial validation loss...
+2025-08-19 05:15:18,387 - __main__ - INFO - Initial validation loss: 11.887651
+2025-08-19 05:15:18,387 - __main__ - INFO - Starting epoch 1/5
+2025-08-19 05:15:30,264 - __main__ - INFO - Calculating validation loss at step 0...
+2025-08-19 05:15:36,123 - __main__ - INFO - Validation loss: 11.887651
+2025-08-19 05:15:40,799 - __main__ - INFO - Calculating validation loss at end of epoch 1...
+2025-08-19 05:15:46,626 - __main__ - INFO - Epoch 1 validation loss: 11.887467
+2025-08-19 05:16:20,282 - __main__ - INFO - Saved checkpoint to finetuned_model/checkpoint-epoch-1
+2025-08-19 05:16:20,297 - __main__ - INFO - Starting epoch 2/5
+2025-08-19 05:16:36,586 - __main__ - INFO - Calculating validation loss at end of epoch 2...
+2025-08-19 05:16:42,469 - __main__ - INFO - Epoch 2 validation loss: 11.887070
+2025-08-19 05:17:15,928 - __main__ - INFO - Saved checkpoint to finetuned_model/checkpoint-epoch-2
+2025-08-19 05:17:15,958 - __main__ - INFO - Starting epoch 3/5
+2025-08-19 05:17:32,382 - __main__ - INFO - Calculating validation loss at end of epoch 3...
+2025-08-19 05:17:38,258 - __main__ - INFO - Epoch 3 validation loss: 11.886300
+2025-08-19 05:18:11,455 - __main__ - INFO - Saved checkpoint to finetuned_model/checkpoint-epoch-3
+2025-08-19 05:18:11,480 - __main__ - INFO - Starting epoch 4/5
+2025-08-19 05:18:27,882 - __main__ - INFO - Calculating validation loss at end of epoch 4...
+2025-08-19 05:18:33,825 - __main__ - INFO - Epoch 4 validation loss: 11.883892
+2025-08-19 05:19:06,984 - __main__ - INFO - Saved checkpoint to finetuned_model/checkpoint-epoch-4
+2025-08-19 05:19:07,006 - __main__ - INFO - Starting epoch 5/5
+2025-08-19 05:19:23,455 - __main__ - INFO - Calculating validation loss at end of epoch 5...
+2025-08-19 05:19:29,324 - __main__ - INFO - Epoch 5 validation loss: 11.880733
+2025-08-19 05:20:02,473 - __main__ - INFO - Saved checkpoint to finetuned_model/checkpoint-epoch-5
+2025-08-19 05:20:07,979 - __main__ - INFO - Final validation loss: 11.875279
+2025-08-19 05:20:50,928 - __main__ - INFO - Finetuning complete! LoRA-based model saved to finetuned_model/model_lora.safetensors
+2025-08-19 05:20:50,947 - __main__ - INFO - Merging LoRA weights into the base model...
+2025-08-19 05:20:50,958 - __main__ - INFO - Replacing LoRALinear modules with plain nn.Linear...
+2025-08-19 05:21:51,620 - __main__ - INFO - LoRA-merged & replaced model saved to finetuned_model/model.safetensors
+2025-08-19 05:21:54,107 - __main__ - INFO - Final training visualization saved to finetuned_model/training_metrics_final.png
+2025-08-19 05:21:54,216 - __main__ - INFO - Finetuning completed successfully!
+2025-08-19 09:21:40,422 - __main__ - INFO - Loading CSM model: sesame/csm-1b
+2025-08-19 09:22:39,542 - __main__ - ERROR - Failed to initialize codebook_embedding from Mimi: 'SplitResidualVectorQuantizer' object has no attribute 'codebooks'
+2025-08-19 09:22:39,547 - __main__ - INFO - Falling back to random init for codebook_embedding
+2025-08-19 09:22:39,548 - __main__ - INFO - Applying LoRA to model...
+2025-08-19 09:22:47,241 - __main__ - INFO - Transcribing audio files in: audio_data
+2025-08-19 09:23:00,792 - __main__ - INFO - Transcribed: 1673-143397-0012.wav -> Sixty-eight bishops, twenty-two of metropolitan rank, defended his cause by a modest and temperate protest. They were excluded from the counsels of their brethren.
+2025-08-19 09:23:01,535 - __main__ - INFO - Transcribed: 1673-143397-0015.wav -> Return to your provinces, and may your private virtues repair the mischief and scandal of your meeting.
+2025-08-19 09:23:02,414 - __main__ - INFO - Transcribed: 1673-143397-0010.wav -> the vanity of kellestine was flattered by the appeal and the partial version of a monk decided the faith of the pope who with his latin clergy was ignorant of the language the arts and the theology of the greeks
+2025-08-19 09:23:03,129 - __main__ - INFO - Transcribed: 1673-143397-0009.wav -> "'But the Vatican received with open arms the messengers of Egypt.'
+2025-08-19 09:23:03,962 - __main__ - INFO - Transcribed: 1673-143397-0003.wav -> the zeal of carol exposed him to the penalties of the julian law but in a feeble government and a superstitious age he was secure of impunity and even of praise
+2025-08-19 09:23:04,893 - __main__ - INFO - Transcribed: 1673-143397-0011.wav -> nestorius who depended on the near approach of his eastern friends persisted like his predecessor chrysostom to disclaim the jurisdiction and to disobey the summons of his enemies they hastened his trial and his accuser presided in the seat of judgment
+2025-08-19 09:23:05,732 - __main__ - INFO - Transcribed: 1673-143397-0005.wav -> a rumour was spread among the christians that the daughter of theon was the only obstacle to the reconciliation of the prefect and the archbishop and that obstacle was speedily removed
+2025-08-19 09:23:06,544 - __main__ - INFO - Transcribed: 1673-143397-0001.wav -> Without any legal sentence, without any royal mandate, the patriarch at the dawn of the day led a seditious multitude to the attack of the synagogues.
+2025-08-19 09:23:07,317 - __main__ - INFO - Transcribed: 1673-143397-0017.wav -> But in this awful moment of the danger of the church, their vow was superseded by a more sublime and indispensable duty.
+2025-08-19 09:23:08,182 - __main__ - INFO - Transcribed: 1673-143397-0004.wav -> Orestes complained, but his just complaints were too quickly forgotten by the ministers of Theodosius, and too deeply remembered by a priest who affected to pardon and continued to hate the prefect of Egypt.
+2025-08-19 09:23:09,068 - __main__ - INFO - Transcribed: 1673-143397-0002.wav -> such crimes would have deserved the animadversion of the magistrate but in this promiscuous outrage the innocent were confounded with the guilty and alexandria was impoverished by the loss of a wealthy and industrious colony
+2025-08-19 09:23:10,031 - __main__ - INFO - Transcribed: 1673-143397-0016.wav -> the feeble son of arcadius was alternately swayed by his wife and sister by the eunuchs and women of the palace superstition and avarice were their ruling passions and the orthodox chiefs were assiduous in their endeavors to alarm the former and to gratify the latter
+2025-08-19 09:23:10,781 - __main__ - INFO - Transcribed: 1673-143397-0007.wav -> "'Exterminate with me the heretics, and with you I will exterminate the Persians.'
+2025-08-19 09:23:11,562 - __main__ - INFO - Transcribed: 1673-143397-0013.wav -> By the vigilance of Memnon, the churches were shut against them, and a strong garrison was thrown into the cathedral.
+2025-08-19 09:23:12,536 - __main__ - INFO - Transcribed: 1673-143397-0020.wav -> a wandering tribe of the blemys or nubians invaded his solitary prison in their retreat they dismissed a crowd of useless captives but no sooner had nasturius reached the banks of the nile than he would gladly have escaped from a roman and orthodox city to the milder servitude of the savages
+2025-08-19 09:23:13,346 - __main__ - INFO - Transcribed: 1673-143397-0014.wav -> During a busy period of three months, the emperor tried every method except the most effectual means of indifference and contempt to reconcile this theological quarrel.
+2025-08-19 09:23:14,158 - __main__ - INFO - Transcribed: 1673-143397-0000.wav -> ardent in the prosecution of heresy kirill auspiciously opened his reign by oppressing the novations the most innocent and harmless of the sectaries
+2025-08-19 09:23:14,884 - __main__ - INFO - Transcribed: 1673-143397-0008.wav -> At these blasphemous sounds, the pillars of the sanctuary were shaken,
+2025-08-19 09:23:15,711 - __main__ - INFO - Transcribed: 1673-143397-0006.wav -> which oppressed the metropolitans of Europe and Asia, invaded the provinces of Antioch and Alexandria, and measured their diocese by the limits of the empire.
+2025-08-19 09:23:16,679 - __main__ - INFO - Transcribed: 1673-143397-0019.wav -> the past he regretted he was discontented with the present and the future he had reason to dread the oriental bishops successively disengaged their cause from his unpopular name and each day decreased the number of the schismatics who revered nestorius as the confessor of the faith
+2025-08-19 09:23:17,402 - __main__ - INFO - Transcribed: 1673-143397-0018.wav -> At the same time, every avenue of the throne was assaulted with gold.
+2025-08-19 09:23:17,402 - __main__ - INFO - Transcribed 21 audio files
+2025-08-19 09:23:17,410 - __main__ - INFO - Dataset created with 21 samples
+2025-08-19 09:23:17,411 - __main__ - INFO - Starting finetuning process
+2025-08-19 09:23:17,456 - __main__ - INFO - Calculating initial validation loss...
+2025-08-19 09:23:31,545 - __main__ - INFO - Initial validation loss: 11.884331
+2025-08-19 09:23:31,545 - __main__ - INFO - Starting epoch 1/10
+2025-08-19 09:23:43,538 - __main__ - INFO - Calculating validation loss at step 0...
+2025-08-19 09:23:49,402 - __main__ - INFO - Validation loss: 11.884331
+2025-08-19 09:23:53,852 - __main__ - INFO - Calculating validation loss at end of epoch 1...
+2025-08-19 09:23:59,736 - __main__ - INFO - Epoch 1 validation loss: 11.884145
+2025-08-19 09:24:49,786 - __main__ - INFO - Saved checkpoint to finetuned_model/checkpoint-epoch-1
+2025-08-19 09:24:49,798 - __main__ - INFO - Starting epoch 2/10
+2025-08-19 09:25:06,378 - __main__ - INFO - Calculating validation loss at end of epoch 2...
+2025-08-19 09:25:12,225 - __main__ - INFO - Epoch 2 validation loss: 11.883221
+2025-08-19 09:26:01,616 - __main__ - INFO - Saved checkpoint to finetuned_model/checkpoint-epoch-2
+2025-08-19 09:26:01,627 - __main__ - INFO - Starting epoch 3/10
+2025-08-19 09:26:17,932 - __main__ - INFO - Calculating validation loss at end of epoch 3...
+2025-08-19 09:26:23,768 - __main__ - INFO - Epoch 3 validation loss: 11.882449
+2025-08-19 09:27:13,498 - __main__ - INFO - Saved checkpoint to finetuned_model/checkpoint-epoch-3
+2025-08-19 09:27:13,513 - __main__ - INFO - Starting epoch 4/10
+2025-08-19 09:27:29,645 - __main__ - INFO - Calculating validation loss at end of epoch 4...
+2025-08-19 09:27:35,449 - __main__ - INFO - Epoch 4 validation loss: 11.880041
+2025-08-19 09:28:25,160 - __main__ - INFO - Saved checkpoint to finetuned_model/checkpoint-epoch-4
+2025-08-19 09:28:25,171 - __main__ - INFO - Starting epoch 5/10
+2025-08-19 09:28:41,227 - __main__ - INFO - Calculating validation loss at end of epoch 5...
+2025-08-19 09:28:47,036 - __main__ - INFO - Epoch 5 validation loss: 11.876879
+2025-08-19 09:29:36,744 - __main__ - INFO - Saved checkpoint to finetuned_model/checkpoint-epoch-5
+2025-08-19 09:29:36,757 - __main__ - INFO - Starting epoch 6/10
+2025-08-19 09:29:48,268 - __main__ - INFO - Calculating validation loss at step 10...
+2025-08-19 09:29:54,193 - __main__ - INFO - Validation loss: 11.875018
+2025-08-19 09:29:58,806 - __main__ - INFO - Calculating validation loss at end of epoch 6...
+2025-08-19 09:30:04,633 - __main__ - INFO - Epoch 6 validation loss: 11.872964
+2025-08-19 09:30:38,065 - __main__ - INFO - Saved checkpoint to finetuned_model/checkpoint-epoch-6
+2025-08-19 09:30:38,088 - __main__ - INFO - Starting epoch 7/10
+2025-08-19 09:30:54,506 - __main__ - INFO - Calculating validation loss at end of epoch 7...
+2025-08-19 09:31:00,491 - __main__ - INFO - Epoch 7 validation loss: 11.868273
+2025-08-19 09:31:33,651 - __main__ - INFO - Saved checkpoint to finetuned_model/checkpoint-epoch-7
+2025-08-19 09:31:33,677 - __main__ - INFO - Starting epoch 8/10
+2025-08-19 09:31:49,904 - __main__ - INFO - Calculating validation loss at end of epoch 8...
+2025-08-19 09:31:55,799 - __main__ - INFO - Epoch 8 validation loss: 11.862944
+2025-08-19 09:32:29,003 - __main__ - INFO - Saved checkpoint to finetuned_model/checkpoint-epoch-8
+2025-08-19 09:32:29,012 - __main__ - INFO - Starting epoch 9/10
+2025-08-19 09:32:45,451 - __main__ - INFO - Calculating validation loss at end of epoch 9...
+2025-08-19 09:32:51,288 - __main__ - INFO - Epoch 9 validation loss: 11.856661
+2025-08-19 09:33:24,430 - __main__ - INFO - Saved checkpoint to finetuned_model/checkpoint-epoch-9
+2025-08-19 09:33:24,431 - __main__ - INFO - Starting epoch 10/10
+2025-08-19 09:33:40,656 - __main__ - INFO - Calculating validation loss at end of epoch 10...
+2025-08-19 09:33:46,480 - __main__ - INFO - Epoch 10 validation loss: 11.849550
+2025-08-19 09:34:19,612 - __main__ - INFO - Saved checkpoint to finetuned_model/checkpoint-epoch-10
+2025-08-19 09:34:25,257 - __main__ - INFO - Final validation loss: 11.846052
+2025-08-19 09:35:23,773 - __main__ - INFO - Finetuning complete! LoRA-based model saved to finetuned_model/model_lora.safetensors
+2025-08-19 09:35:23,782 - __main__ - INFO - Merging LoRA weights into the base model...
+2025-08-19 09:35:23,793 - __main__ - INFO - Replacing LoRALinear modules with plain nn.Linear...
+2025-08-19 09:36:21,531 - __main__ - INFO - LoRA-merged & replaced model saved to finetuned_model/model.safetensors
+2025-08-19 09:36:23,027 - __main__ - INFO - Final training visualization saved to finetuned_model/training_metrics_final.png
+2025-08-19 09:36:23,060 - __main__ - INFO - Finetuning completed successfully!

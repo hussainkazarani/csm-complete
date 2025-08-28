@@ -1,0 +1,13 @@
+{
+  "system_prompt": "You are a friendly and intelligent assistant.",
+  "model_path": "./finetuned_model",
+  "llm_path": "./models/Llama-3.2-1B-Instruct-Q6_K_L.gguf",
+  "reference_audio_path": "./output0.wav",
+  "reference_text": "Ardent in the prosecution of heresy, Cyril auspiciously opened his reign by oppressing the Novatians, the most innocent and harmless of the sectaries.",
+  "reference_audio_path2": "",
+  "reference_text2": "",
+  "reference_audio_path3": "",
+  "reference_text3": "",
+  "mic_id": "default",
+  "output_id": "default"
+}
