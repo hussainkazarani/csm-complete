@@ -1,0 +1,180 @@
+cd Downloads/intern/environment
+ssh -i "csm.pem" ubuntu@107.22.17.194
+export TORCH_USE_CUDA_DSA=1
+
+FLUTTER
+fvm use 3.32.0
+fvm flutter clean
+fvm flutter pub get
+fvm flutter build ios --release
+fvm flutter run --release
+
+MACBOOK
+source .env/bin/activate
+python -m venv .env
+python3 -m venv --copies .env (macbook)
+which pip3
+which python3
+
+OTHER
+sudo lsof -i :8443
+kill -9 5398
+df -h
+gg=G (INDENTATION IN VIM)
+which pip
+which python
+curl https://csm-basic.hussainkazarani.site/
+ping csm-basic.hussainkazarani.site
+watch -n 1 nvidia-smi
+
+————————————————————————
+CSM 1-B EC2
+
+sudo apt update
+nvcc --version
+nvidia-smi
+sudo apt install -y nvidia-driver-535 nvidia-utils-535 nvidia-cuda-toolkit
+sudo reboot
+
+sudo apt install -y software-properties-common
+# Add deadsnakes PPA
+sudo add-apt-repository ppa:deadsnakes/ppa
+sudo apt update
+
+sudo apt install -y python3.10 python3.10-venv python3.10-dev python3-pip
+python3.10 -m venv .env
+source .env/bin/activate
+pip install --upgrade pip
+
+python --version
+which python
+
+pip install -r requirements.txt
+sudo apt install -y ffmpeg
+sudo apt install -y libportaudio2 libportaudiocpp0 portaudio19-dev
+sudo apt install -y lsof
+
+huggingface-cli login
+
+huggingface-cli download bartowski/Llama-3.2-1B-Instruct-GGUF --include "Llama-3.2-1B-Instruct-Q6_K_L.gguf" --local-dir ./models
+
+————————————
+CONFIG SETUP
+
+AUDIO TEXT
+Ardent in the prosecution of heresy, Cyril auspiciously opened his reign by oppressing the Novatians, the most innocent and harmless of the sectaries.
+Without any legal sentence, without any royal mandate, the patriarch at the dawn of day led a seditious multitude to the attack of the synagogues.
+Such crimes would have deserved the animadversion of the magistrate, but in this promiscuous outrage the innocent were confounded with the guilty, and Alexandria was impoverished by the loss of a wealthy and industrious colony.
+
+You are a friendly and intelligent assistant. You will answer any question or talk about any topic the user wants. 
+Rules:
+1. Do not use apostrophes anywhere in your replies.
+2. Replace contractions like "I'm," "you're," "it's," etc., with their full forms, e.g., "I am," "you are," "it is."
+3. Provide clear, concise, and helpful answers.
+4. Maintain a friendly and engaging tone.
+
+./models/Llama-3.2-1B-Instruct-Q6_K_L.gguf
+
+————————————
+DOCKER/EC-2
+
+chmod 600 csm.pem
+ssh -i "csm.pem" ubuntu@IP
+ssh -L 8443:localhost:8443 -i “csm.pem" ubuntu@IP
+scp -i "sesameai.pem" ubuntu@IP:~/csm-streaming/output.wav .
+
+docker exec -it 81f0c828929a bash
+docker rm a1b2c3d4e5f6
+
+source .env/bin/activate
+python kive.py
+watch -n 1 nvidia-smi
+
+————————————
+PM-2/CLOUDFLARE
+
+pm2 start cloudflared --name csm-tunnel -- tunnel --config ~/.cloudflared/config.yml run zoom
+pm2 start .env/bin/python --name "csm-basic-app" -- -m customModels.server_optimize
+pm2 start ./.env/bin/python --name csm-block -- kive-blocks.py
+pm2 start ./.env/bin/python --name csm-llm -- tera.py
+
+pm2 ls
+pm2 restart 0
+pm2 delete 0
+pm2 logs 0
+
+curl -fsSL https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb -o cloudflared.deb
+sudo dpkg -i cloudflared.deb
+rm cloudflared.deb
+cloudflared --version
+cloudflared tunnel login
+cloudflared tunnel list
+
+sudo apt install -y curl
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+sudo apt install -y nodejs
+sudo npm install -g pm2
+node -v
+npm -v
+pm2 --version
+
+cloudflared login
+cloudflared tunnel create zoom
+vim ~/.cloudflared/config.yml (add the config.yml)
+(use pm2 cmds from here)
+
+add <IP>.cfargotunnel.com and the correct public ip with "curl ifconfig.me" in GUI
+
+cloudflared tunnel list
+cloudflared tunnel delete <name>
+cloudflared tunnel create <name>
+
+————————————
+HOST AND SIGNING ON NEW MACHINE
+
+ssh-keygen -t ed25519 -C “22a91a05e3@technicalhub.io”
+cat /home/ubuntu/.ssh/id_ed25519.pub (ADD IN GITHUB)
+
+git config —global user.name hussain1441
+git config —global user.email 22a91a05e3@technicalhub.io
+
+————————————
+CSM-BASIC
+
+SERVER-SIDE
+git clone git@github.com:hussainkazarani/csm-basic.git
+python3.10 -m venv .env
+source .env/bin/activate
+pip install -r requirements.txt
+pip install flask-cors
+huggingface-cli login (ID)
+python -m customModels.server_optimize (OR PM2 COMMAND)
+sudo pm2 start .env/bin/python --name "csm-basic-app" -- -m customModels.server_optimize
+
+CLENT-SIDE
+Release Mode, Display Name in ios/Runner/Info.plist
+flutter pub run flutter_launcher_icons:main
+fvm flutter build ios --release
+fvm flutter run --releases
+
+————————————
+pip install websockets numpy sounddevice
+pip install llama-cpp-python
+
+
+
+
+
+
+
+CONFIG.YML (CHANGE ID)
+tunnel: TUNNEL_ID
+credentials-file: ~/.cloudflared/TUNNEL_ID.json
+
+ingress:
+  - hostname: csm-basic.hussainkazarani.site
+    service: http://localhost:5000
+  - hostname: csm-stream.hussainkazarani.site
+    service: http://localhost:8443
+  - service: http_status:404
+
