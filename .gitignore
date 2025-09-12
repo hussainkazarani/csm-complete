@@ -49,7 +49,7 @@ csm-stream/.python-version
 csm-stream/models/Llama-3.2-1B-Instruct-Q6_K_L.gguf
 csm-stream/finetuned_model/
 
-*.wav
+# *.wav
 csm-stream/output_*/
 csm-stream/basic_audio.wav
 csm-stream/full_conversation.wav
