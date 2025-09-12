@@ -99,7 +99,7 @@ csm-basic/*.swo
 
 # Project specific
 csm-basic/.python-version
-*.wav
+#*.wav
 csm-basic/output_*/
 csm-basic/basic_audio.wav
 csm-basic/full_conversation.wav
