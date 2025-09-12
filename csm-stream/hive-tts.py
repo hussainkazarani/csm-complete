@@ -109,6 +109,12 @@ def model_worker():
 
             model_result_queue.put(None)  # EOS marker
 
+            # Insert pause after sentences (1 second of silence)
+            if text.strip().endswith((".", "?", "!")):
+                silence = torch.zeros(int(generator.sample_rate * 1.0))  # 1s of silence
+                model_result_queue.put(silence)
+                model_result_queue.put(None)  # EOS marker for silence block
+
         except queue.Empty:
             continue
         except Exception as e:
@@ -182,17 +188,20 @@ async def audio_generation(text: str, websocket: WebSocket):
             if len(text_chunks) > 1:
                 await websocket.send_json(
                     {
-                        "type": "status",
+                        "type": "chunk_status",
                         "message": f"Processing part {i+1}/{len(text_chunks)}...",
+                        "current": i + 1,
+                        "total": len(text_chunks),
                     }
                 )
 
             # Estimate audio length for better streaming
             words = chunk.split()
-            avg_wpm = 100
+            avg_wpm = 80
             words_per_second = avg_wpm / 60
+            padding_seconds = 2.0  # Reduced from 2000 to 2.0 seconds
             estimated_seconds = len(words) / words_per_second
-            max_audio_length_ms = int(estimated_seconds * 1000)
+            max_audio_length_ms = int((estimated_seconds + padding_seconds) * 1000)
 
             # Send request to model thread
             model_queue.put(
@@ -212,7 +221,11 @@ async def audio_generation(text: str, websocket: WebSocket):
             # Stream audio chunks in real-time
             while True:
                 try:
-                    result = model_result_queue.get(timeout=1.0)
+                    if websocket not in active_connections:
+                        print("[Audio Generation] Client disconnected during streaming")
+                        break
+
+                    result = model_result_queue.get(timeout=5.0)  # Increased timeout
 
                     if result is None:  # End of stream for this chunk
                         break
@@ -224,6 +237,10 @@ async def audio_generation(text: str, websocket: WebSocket):
 
                     # Convert to numpy and send
                     chunk_array = result.cpu().numpy().astype(np.float32)
+
+                    # Apply gain boost
+                    gain = 1.5
+                    chunk_array = np.clip(chunk_array * gain, -1.0, 1.0)
 
                     # Send first chunk status
                     if not first_chunk_sent:
@@ -248,11 +265,23 @@ async def audio_generation(text: str, websocket: WebSocket):
                     )
 
                 except queue.Empty:
+                    # Send keep-alive message to prevent client timeout
+                    await websocket.send_json(
+                        {"type": "keep_alive", "message": "Still processing..."}
+                    )
                     continue
 
         # All chunks processed
         await websocket.send_json(
             {"type": "status", "message": "All parts processed successfully"}
+        )
+
+        await websocket.send_json(
+            {
+                "type": "completion",
+                "message": "audio_generation_complete",
+                "chunks_processed": chunk_counter,
+            }
         )
 
     except Exception as e:
@@ -264,9 +293,6 @@ async def audio_generation(text: str, websocket: WebSocket):
     finally:
         is_speaking = False
         audio_gen_lock.release()
-
-        # Send end of stream
-        await websocket.send_json({"type": "audio_status", "status": "complete"})
 
 
 # ----- Load Reference Audio -----
@@ -357,8 +383,19 @@ async def websocket_endpoint(websocket: WebSocket):
                 # Start audio generation
                 await audio_generation(text, websocket)
 
+                # Send completion message but keep connection open
+                await websocket.send_json(
+                    {"type": "status", "message": "Ready for next text input"}
+                )
+
     except Exception as e:
-        print(f"[WebSocket] Error: {e}", flush=True)
+        import traceback
+
+        print(f"[WebSocket] Error: {e}")
+        print(traceback.format_exc())
+        flush = True
+        # print(f"[WebSocket] Error: {e}", flush=True)
+
     finally:
         if websocket in active_connections:
             active_connections.remove(websocket)
@@ -366,6 +403,12 @@ async def websocket_endpoint(websocket: WebSocket):
         while not model_result_queue.empty():
             try:
                 model_result_queue.get_nowait()
+            except queue.Empty:
+                break
+
+        while not model_queue.empty():
+            try:
+                model_queue.get_nowait()
             except queue.Empty:
                 break
 
@@ -394,7 +437,7 @@ if __name__ == "__main__":
     uvicorn.run(
         app,
         host="0.0.0.0",
-        port=8443,
+        port=9999,
         timeout_keep_alive=300,  # 5 minutes
         timeout_graceful_shutdown=60,  # 1 minute
     )

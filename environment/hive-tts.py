@@ -54,7 +54,7 @@ class Config(BaseModel):
     reference_text3: Optional[str] = None
 
 
-# ----- Model Worker Thread -----
+# ----- Modified Model Worker Thread -----
 def model_worker():
     global generator
 
@@ -82,19 +82,21 @@ def model_worker():
 
     # SET MODEL.READY
     model_ready.set()
-
     print("[Worker] Model warm-up complete!", flush=True)
 
     # Main worker loop
     while model_thread_running.is_set():
         try:
             request = model_queue.get(timeout=0.1)
-            if request is None:
+            if request is None:  # Shutdown signal
                 break
 
             text, speaker_id, context, max_ms, temperature, topk = request
 
+            print(f"[Worker] Processing text: {text[:50]}...")
+
             # Generate audio stream
+            chunk_count = 0
             for chunk in generator.generate_stream(
                 text=text,
                 speaker=speaker_id,
@@ -103,17 +105,31 @@ def model_worker():
                 temperature=temperature,
                 topk=topk,
             ):
+                chunk_count += 1
                 model_result_queue.put(chunk)
                 if not model_thread_running.is_set():
                     break
 
+            print(f"[Worker] Generated {chunk_count} chunks for text")
             model_result_queue.put(None)  # EOS marker
+
+            # Insert pause after sentences (1 second of silence)
+            if text.strip().endswith((".", "?", "!")):
+                silence = torch.zeros(int(generator.sample_rate * 1.0))  # 1s of silence
+                model_result_queue.put(silence)
+                model_result_queue.put(None)  # EOS marker for silence block
 
         except queue.Empty:
             continue
         except Exception as e:
             print(f"[Worker] Error: {e}", flush=True)
             model_result_queue.put(Exception(f"Generation error: {e}"))
+            # Clear any remaining items from the queue to prevent blocking
+            while not model_queue.empty():
+                try:
+                    model_queue.get_nowait()
+                except queue.Empty:
+                    break
 
     print("[Worker] Model worker thread exiting", flush=True)
 
@@ -158,6 +174,13 @@ async def audio_generation(text: str, websocket: WebSocket):
     try:
         is_speaking = True
 
+        # Clear any previous results from the queue
+        while not model_result_queue.empty():
+            try:
+                model_result_queue.get_nowait()
+            except queue.Empty:
+                break
+
         await websocket.send_json({"type": "audio_status", "status": "generating"})
 
         # Preprocess text
@@ -177,6 +200,8 @@ async def audio_generation(text: str, websocket: WebSocket):
                 }
             )
 
+        total_chunks_processed = 0
+
         # Process each chunk
         for i, chunk in enumerate(text_chunks):
             if len(text_chunks) > 1:
@@ -189,10 +214,11 @@ async def audio_generation(text: str, websocket: WebSocket):
 
             # Estimate audio length for better streaming
             words = chunk.split()
-            avg_wpm = 100
+            avg_wpm = 80
             words_per_second = avg_wpm / 60
+            padding_seconds = 2.0  # Reduced from 2000 to 2.0 seconds
             estimated_seconds = len(words) / words_per_second
-            max_audio_length_ms = int(estimated_seconds * 1000)
+            max_audio_length_ms = int((estimated_seconds + padding_seconds) * 1000)
 
             # Send request to model thread
             model_queue.put(
@@ -212,7 +238,11 @@ async def audio_generation(text: str, websocket: WebSocket):
             # Stream audio chunks in real-time
             while True:
                 try:
-                    result = model_result_queue.get(timeout=1.0)
+                    if websocket not in active_connections:
+                        print("[Audio Generation] Client disconnected during streaming")
+                        break
+
+                    result = model_result_queue.get(timeout=1.0)  # Increased timeout
 
                     if result is None:  # End of stream for this chunk
                         break
@@ -221,9 +251,18 @@ async def audio_generation(text: str, websocket: WebSocket):
                         raise result
 
                     chunk_counter += 1
+                    total_chunks_processed += 1
 
                     # Convert to numpy and send
                     chunk_array = result.cpu().numpy().astype(np.float32)
+
+                    # Check if audio is not silent
+                    if np.max(np.abs(chunk_array)) < 0.01:  # Almost silent
+                        print(f"[Warning] Chunk {chunk_counter} is almost silent")
+
+                    # Apply gain boost
+                    gain = 1.5
+                    chunk_array = np.clip(chunk_array * gain, -1.0, 1.0)
 
                     # Send first chunk status
                     if not first_chunk_sent:
@@ -248,11 +287,20 @@ async def audio_generation(text: str, websocket: WebSocket):
                     )
 
                 except queue.Empty:
-                    continue
+                    print(f"[Warning] Timeout waiting for chunk {chunk_counter}")
+                    break
 
         # All chunks processed
         await websocket.send_json(
             {"type": "status", "message": "All parts processed successfully"}
+        )
+
+        await websocket.send_json(
+            {
+                "type": "completion",
+                "message": "audio_generation_complete",
+                "chunks_processed": total_chunks_processed,
+            }
         )
 
     except Exception as e:
@@ -260,13 +308,17 @@ async def audio_generation(text: str, websocket: WebSocket):
         await websocket.send_json(
             {"type": "error", "message": f"Generation failed: {str(e)}"}
         )
+        
+        # Clear queues on error
+        while not model_result_queue.empty():
+            try:
+                model_result_queue.get_nowait()
+            except queue.Empty:
+                break
 
     finally:
         is_speaking = False
         audio_gen_lock.release()
-
-        # Send end of stream
-        await websocket.send_json({"type": "audio_status", "status": "complete"})
 
 
 # ----- Load Reference Audio -----
@@ -328,11 +380,6 @@ async def websocket_endpoint(websocket: WebSocket):
 
     await websocket.accept()
     active_connections.append(websocket)
-
-    #    print(f"[WebSocket] Client connected. Active connections: {len(active_connections)}")
-    #    print(f"[WebSocket] Model queue size: {model_queue.qsize()}")
-    #    print(f"[WebSocket] Result queue size: {model_result_queue.qsize()}")
-
     print("[WebSocket] Client connected")
 
     # Wait for model to be ready
@@ -352,17 +399,33 @@ async def websocket_endpoint(websocket: WebSocket):
 
             if data["type"] == "text_message":
                 text = data["text"]
-                print(f"[WebSocket] Received text: {text}")
+                print(f"[WebSocket] Received text: {text[:50]}...")
+
+                # Clear queues before starting new generation
+                while not model_result_queue.empty():
+                    try:
+                        model_result_queue.get_nowait()
+                    except queue.Empty:
+                        break
 
                 # Start audio generation
                 await audio_generation(text, websocket)
 
+                # Send completion message but keep connection open
+                await websocket.send_json(
+                    {"type": "status", "message": "Ready for next text input"}
+                )
+
     except Exception as e:
         print(f"[WebSocket] Error: {e}", flush=True)
+        import traceback
+        traceback.print_exc()
+
     finally:
         if websocket in active_connections:
             active_connections.remove(websocket)
 
+        # Clear queues on disconnect
         while not model_result_queue.empty():
             try:
                 model_result_queue.get_nowait()
@@ -394,7 +457,7 @@ if __name__ == "__main__":
     uvicorn.run(
         app,
         host="0.0.0.0",
-        port=8443,
+        port=9999,
         timeout_keep_alive=300,  # 5 minutes
         timeout_graceful_shutdown=60,  # 1 minute
     )

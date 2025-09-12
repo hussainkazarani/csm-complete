@@ -1,0 +1,35 @@
+{
+    "model_path": "./finetuned_model",
+    "voices": [
+        {
+            "id": 0,
+            "name": "chandrika",
+            "reference_audio": "voices/chandrika/chandrika_1.wav",
+            "reference_text": "Humans are naturally curious. From the earliest days of civilization, people have looked at the stars, the oceans, and the forests and wondered what lies beyond. Curiosity drives innovation, asking questions that lead to discoveries, inventions, and new ways of thinking. Every child exploring a garden or a rock is practicing the same impulse that has led to great scientific achievements. Learning begins with observation, and observation begins with wonder.",
+            "reference_audio2": "voices/chandrika/chandrika_2.wav",
+            "reference_text2": "Exploration is not limited to physical spaces. We also explore ideas, concepts, and emotions. Every book we read or conversation we have opens a door to a new perspective. Human progress is fueled by the willingness to question assumptions and to seek knowledge in unfamiliar places. By embracing the unknown, we develop the skills to adapt, understand, and grow.",
+            "reference_audio3": "voices/chandrika/chandrika_3.wav",
+            "reference_text3": "Nature is one of the most powerful teachers. Mountains, rivers, and forests demonstrate resilience and the delicate balance of life. Observing animals, their behaviors, and habitats teaches us about survival, cooperation, and adaptation. Even the smallest plant, growing through cracks in concrete, provides a lesson in persistence. By paying attention to the natural world, humans gain insights that extend beyond science into philosophy and art."
+        },
+        {
+            "id": 1,
+            "name": "samuel",
+            "reference_audio": "voices/samuel/samuel.wav",
+            "reference_text": "Humans are naturally curious. From the earliest days of civilization, people have looked at the stars, the oceans, and the forests and wondered what lies beyond. Curiosity drives innovation, asking questions that lead to discoveries, innovations, and new ways of thinking."
+        },
+        {
+            "id": 2,
+            "name": "sesame",
+            "reference_audio": "voices/sesame/sesame_1.wav",
+            "reference_text": "Ardent in the prosecution of heresy, Cyril auspiciously opened his reign by oppressing the Novatians, the most innocent and harmless of the sectaries.",
+            "reference_audio2": "voices/sesame/sesame_2.wav",
+            "reference_text2": "Without any legal sentence, without any royal mandate, the patriarch at the dawn of day led a seditious multitude to the attack of the synagogues.",
+            "reference_audio3": "voices/sesame/sesame_3.wav",
+            "reference_text3": "Such crimes would have deserved the animadversion of the magistrate, but in this promiscuous outrage the innocent were confounded with the guilty, and Alexandria was impoverished by the loss of a wealthy and industrious colony."
+        }
+    ],
+    "default_voice_id": 0,
+    "llm_path": "./models/llama32-1b.gguf",
+    "system_prompt": "You are a friendly AI",
+    "max_tokens": 8192
+}

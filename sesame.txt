@@ -1,5 +1,7 @@
 cd Downloads/intern/environment
-ssh -i "csm.pem" ubuntu@107.22.17.194
+ssh -i "sesame-csm.pem" ubuntu@3.95.247.47
+ssh -i "sesame-hive.pem" ubuntu@35.175.111.89
+hive - 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
 export TORCH_USE_CUDA_DSA=1
 
 FLUTTER
@@ -26,6 +28,7 @@ which python
 curl https://csm-basic.hussainkazarani.site/
 ping csm-basic.hussainkazarani.site
 watch -n 1 nvidia-smi
+watch -n 5 df -h
 
 ————————————————————————
 CSM 1-B EC2
@@ -56,7 +59,7 @@ sudo apt install -y lsof
 
 huggingface-cli login
 
-huggingface-cli download bartowski/Llama-3.2-1B-Instruct-GGUF --include "Llama-3.2-1B-Instruct-Q6_K_L.gguf" --local-dir ./models
+huggingface-cli download bartowski/Llama-3.2-1B-Instruct-GGUF --include "Llama-3.2-1B-Instruct-Q6_K_L.gguf" --local-dir ./models --local-dir-use-symlinks False && mv ./models/Llama-3.2-1B-Instruct-Q6_K_L.gguf ./models/llama32-1b.gguf
 
 ————————————
 CONFIG SETUP
@@ -82,6 +85,10 @@ chmod 600 csm.pem
 ssh -i "csm.pem" ubuntu@IP
 ssh -L 8443:localhost:8443 -i “csm.pem" ubuntu@IP
 scp -i "sesameai.pem" ubuntu@IP:~/csm-streaming/output.wav .
+scp -i "sesame-hive.pem" -r audio_data/ ubuntu@35.175.111.89:/home/ubuntu/hive
+scp -i "sesame.pem" file ubuntu@35.175.111.89:/home/ubuntu/file
+
+scp -i "sesame-hive.pem" ubuntu@35.175.111.89:~/hive/hive-tts.py .
 
 docker exec -it 81f0c828929a bash
 docker rm a1b2c3d4e5f6
@@ -96,6 +103,7 @@ PM-2/CLOUDFLARE
 pm2 start cloudflared --name csm-tunnel -- tunnel --config ~/.cloudflared/config.yml run zoom
 pm2 start .env/bin/python --name "csm-basic-app" -- -m customModels.server_optimize
 pm2 start ./.env/bin/python --name csm-block -- kive-blocks.py
+pm2 start ./.env/bin/python --name hive-tts -- hive-tts.py
 pm2 start ./.env/bin/python --name csm-llm -- tera.py
 
 pm2 ls
@@ -156,11 +164,31 @@ Release Mode, Display Name in ios/Runner/Info.plist
 flutter pub run flutter_launcher_icons:main
 fvm flutter build ios --release
 fvm flutter run --releases
+————————————
+CSM-STREAM
+scp -i "sesame21.pem" two.mp3 ubuntu@35.175.111.89:/home/ubuntu/audio1.mp3
+scp -i "sesame.pem" -r my_project ubuntu@192.168.1.50:/home/ubuntu/
 
+git clone git@github.com:hussainkazarani/csm-basic.git
+python3.10 -m venv .env
+source .env/bin/activate
+pip install -r requirements.txt
+pip install flask-cors
+huggingface-cli login (ID)
+
+install cloudflared and pm2
+cloudflared tunnel create hive
+vim /home/ubuntu/.cloudflared/config.yml (add the config.yml)
+add <IP>.cfargotunnel.com and the correct public ip with "curl ifconfig.me" in GUI
+
+pm2 start cloudflared --name hive-tunnel -- tunnel --config /home/ubuntu/.cloudflared/config.yml run hive
+pm2 start ./.env/bin/python --name hive-tts -- hive-tts.py
+pm2 start ./.env/bin/python --name hive-block -- kive-blocks.py
+pm2 start ./.env/bin/python --name storage -- storage.py
+pm2 start ./.env/bin/python --name selection --env TORCH_USE_CUDA_DSA=1 -- selection.py
 ————————————
 pip install websockets numpy sounddevice
 pip install llama-cpp-python
-
 
 
 
@@ -176,5 +204,18 @@ ingress:
     service: http://localhost:5000
   - hostname: csm-stream.hussainkazarani.site
     service: http://localhost:8443
+  - hostname: storage.hussainkazarani.site
+    service: http://localhost:8888
   - service: http_status:404
+
+
+curl "http://storage.hussainkazarani.site/"
+curl "http://storage.hussainkazarani.site/status"
+
+curl -X POST "http://storage.hussainkazarani.site/generate" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "texts": ["Hello world", "Second text", "Third message"],
+    "voice_id": 0
+  }'
 

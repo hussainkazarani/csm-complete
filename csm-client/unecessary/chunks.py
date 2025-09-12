@@ -22,7 +22,7 @@ async def test_with_local_playback():
     # Connect to localhost (through SSH tunnel)
     try:
         async with websockets.connect(
-            "ws://csm-stream.hussainkazarani.site/ws", ping_interval=None
+            "ws://hive.hussainkazarani.site/ws", ping_interval=None
         ) as websocket:
             print("Connected through SSH tunnel!")
 

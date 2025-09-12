@@ -1,0 +1,105 @@
+    """
+    Split text into chunks:
+      - First split by paragraphs (\n).
+      - If a paragraph <= max_words, keep it whole.
+      - If > max_words, split at sentence boundaries.
+      - If a single sentence > max_words, split by words as last resort.
+    Returns a flat list of chunks in order.
+    """
+    paragraphs = [p.strip() for p in text.split("\n") if p.strip()]
+    print(f"[DEBUG] Detected paragraphs,{paragraphs}", flush=True)
+    if not paragraphs:
+        paragraphs = [text.strip()]
+
+    chunks = []
+
+    for idx, paragraph in enumerate(paragraphs, start=1):
+        words = paragraph.split()
+        word_count = len(words)
+        print(f"[DEBUG] Paragraph {idx}: {word_count} words")
+
+        if word_count <= max_words:
+            chunks.append(paragraph)
+            print(f"   -> kept whole (chunk {len(chunks)}), {word_count} words")
+            continue
+
+        # split into sentences (.?! as delimiters)
+        sentences = re.split(r"(?<=[.?!])\s+", paragraph)
+        sentences = [s.strip() for s in sentences if s.strip()]
+        print(f"   -> splitting into {len(sentences)} sentences")
+
+        current_chunk = []
+        current_word_count = 0
+
+        for sentence in sentences:
+            sentence_words = sentence.split()
+            sentence_word_count = len(sentence_words)
+
+            # if a sentence itself is longer than max_words → split it
+            if sentence_word_count > max_words:
+                if current_chunk:
+                    chunks.append(" ".join(current_chunk))
+                    print(
+                        f"      -> flushed chunk {len(chunks)}, {current_word_count} words"
+                    )
+                    current_chunk = []
+                    current_word_count = 0
+
+                print(f"      -> splitting long sentence ({sentence_word_count} words)")
+                for i in range(0, sentence_word_count, max_words):
+                    sub_chunk = " ".join(sentence_words[i : i + max_words])
+                    chunks.append(sub_chunk)
+                    print(
+                        f"         -> created sub-chunk {len(chunks)}, {len(sub_chunk.split())} words"
+                    )
+                continue
+
+            # if adding this sentence would exceed max_words → flush current chunk
+            if current_word_count + sentence_word_count > max_words:
+                chunks.append(" ".join(current_chunk))
+                print(
+                    f"      -> flushed chunk {len(chunks)}, {current_word_count} words"
+                )
+                current_chunk = []
+                current_word_count = 0
+
+            current_chunk.append(sentence)
+            current_word_count += sentence_word_count
+
+        if current_chunk:
+            chunks.append(" ".join(current_chunk))
+            print(f"   -> final chunk {len(chunks)}, {current_word_count} words")
+
+    print(f"[DEBUG] Total chunks created: {len(chunks)}")
+    return chunks
+
+
+def normalize_with_smoothing(audio_chunk, target_loudness=-16.0):
+    global last_chunk_rms
+
+    audio_array = audio_chunk.copy()
+    rms = np.sqrt(np.mean(audio_array**2))
+
+    if rms < 1e-6:
+        last_chunk_rms = None
+        return audio_array
+
+    if last_chunk_rms is not None:
+        # Smooth the RMS transition between chunks
+        smoothed_rms = smoothing_factor * last_chunk_rms + (1 - smoothing_factor) * rms
+        rms = smoothed_rms
+
+    current_loudness = 20 * np.log10(rms)
+    gain_db = target_loudness - current_loudness
+    gain_linear = 10 ** (gain_db / 20)
+
+    audio_array = audio_array * gain_linear
+    last_chunk_rms = rms  # Store for next chunk
+
+    # Prevent clipping
+    peak = np.max(np.abs(audio_array))
+    if peak > 0.95:
+        audio_array = audio_array * (0.95 / peak)
+        last_chunk_rms = last_chunk_rms * (0.95 / peak)
+
+    return audio_array

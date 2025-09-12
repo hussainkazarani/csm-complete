@@ -1,0 +1,127 @@
+   # Add silence after EVERY chunk (except the last one)
+                        if i < len(text_chunks) - 1:
+                            silence_duration = 0.5  # seconds between chunks
+                            silence_samples = int(
+                                generator.sample_rate * silence_duration
+                            )
+                            silence = torch.zeros(silence_samples)
+                            silence_array = silence.cpu().numpy().astype(np.float32)
+
+                            await websocket.send_json(
+                                {
+                                    "type": "audio_chunk",
+                                    "audio": silence_array.tolist(),
+                                    "sample_rate": generator.sample_rate,
+                                    "chunk_num": chunk_counter,
+                                    "part": f"{i+1}/{len(text_chunks)}",
+                                    "is_silence": True,
+                                }
+                            )
+                            print(
+                                f"[Silence] Added {silence_duration}s pause after chunk {i+1}"
+                            )
+                        break
+
+
+
+SENTENCE SPLIT
+
+    # Split into sentences
+    sentences = re.split(r"(?<=[.!?])\s+", text)
+    sentences = [s.strip() for s in sentences if s.strip()]
+
+    chunks = []
+
+    for sentence in sentences:
+        words = sentence.split()
+        word_count = len(words)
+
+        # If sentence is too long, split it by word count
+        if word_count > max_words:
+            for i in range(0, word_count, max_words):
+                chunk = " ".join(words[i : i + max_words])
+                chunks.append(chunk)
+        else:
+            # Normal sentence as its own chunk
+            chunks.append(sentence)
+
+    return chunks
+
+===========
+
+PREPROCESS
+def preprocess_text_for_tts(text):
+    text = text.replace("-", " ")
+    # This includes: ; : " '  ~ @ # $ % ^ & * ( ) _ - + = [ ] { } \ | / < >
+    pattern = r"[^\w\s.,!?\']"  # <-- Look at this pattern
+    # Replace matched punctuation with empty string
+    cleaned_text = re.sub(pattern, "", text)
+    # normalize multiple spaces to single space
+    cleaned_text = re.sub(r"\s+", " ", cleaned_text)
+    # ensure there's a space after punctuation for better speech pacing
+    cleaned_text = re.sub(r"([.,!?])(\S)", r"\1 \2", cleaned_text)
+    cleaned_text = re.sub(r"([.!?])\s", r"\1... ", cleaned_text)
+
+    print(cleaned_text, flush=True)
+    return cleaned_text.strip()
+	==============
+	SPLIT text
+   # Split into sentences first
+    sentences = re.split(r"(?<=[.!?])\s+", text)
+    sentences = [s.strip() for s in sentences if s.strip()]
+
+    chunks = []
+    current_chunk = []
+    current_word_count = 0
+
+    for sentence in sentences:
+        word_count = len(sentence.split())
+
+        # If this would exceed max words and we have content, finish current chunk
+        if current_word_count + word_count > max_words and current_chunk:
+            # Find the best break point (nearest sentence end)
+            chunks.append(" ".join(current_chunk))
+            current_chunk = [sentence]
+            current_word_count = word_count
+        else:
+            current_chunk.append(sentence)
+            current_word_count += word_count
+
+    # Add the final chunk
+    if current_chunk:
+        chunks.append(" ".join(current_chunk))
+
+    return chunks
+=============
+    text = text.replace("-", " ")
+    # This includes: ; : " '  ~ @ # $ % ^ & * ( ) _ - + = [ ] { } \ | / < >
+    pattern = r"[^\w\s.,!?\']"  # <-- Look at this pattern
+    # Replace matched punctuation with empty string
+    cleaned_text = re.sub(pattern, "", text)
+    # normalize multiple spaces to single space
+    cleaned_text = re.sub(r"\s+", " ", cleaned_text)
+    # ensure there's a space after punctuation for better speech pacing
+    cleaned_text = re.sub(r"([.,!?])(\S)", r"\1 \2", cleaned_text)
+
+    print(cleaned_text, flush=True)
+    return cleaned_text.strip()
+===============
+~
+~
+~
+~
+~
+"config.json" 13L, 1639B                                                                   8,7           All
+{
+    "model_path": "./finetuned_model",
+    "voice_speaker_id": 0,
+    "reference_audio": "one.mp3",
+    "reference_text": "Humans are naturally curious. From the earliest days of civilization, people have looked at the stars, the oceans, and the forests and wondered what lies beyond. Curiosity drives innovation, asking questions that lead to discoveries, inventions, and new ways of thinking. Every child exploring a garden or a rock is practicing the same impulse that has led to great scientific achievements. Learning begins with observation, and observation begins with wonder.",
+    "reference_audio2": "two.mp3",
+    "reference_text2": "Exploration is not limited to physical spaces. We also explore ideas, concepts, and emotions. Every book we read or conversation we have opens a door to a new perspective. Human progress is fueled by the willingness to question assumptions and to seek knowledge in unfamiliar places. By embracing the unknown, we develop the skills to adapt, understand, and grow.",
+    "reference_audio3": "three.mp3",
+    "reference_text3": "Nature is one of the most powerful teachers. Mountains, rivers, and forests demonstrate resilience and the delicate balance of life. Observing animals, their behaviors, and habitats teaches us about survival, cooperation, and adaptation. Even the smallest plant, growing through cracks in concrete, provides a lesson in persistence. By paying attention to the natural world, humans gain insights that extend beyond science into philosophy and art.",
+    "llm_path": "./models/llama32-1b.gguf",
+    "system_prompt": "You are a friendly AI",
+    "max_tokens": 8192
+}

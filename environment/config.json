@@ -1,0 +1,9 @@
+{
+    "model_path": "./finetuned_model",
+    "voice_speaker_id": 0,
+    "reference_audio": "one.mp3",
+    "reference_text": "Humans are naturally curious. From the earliest days of civilization, people have looked at the stars, the oceans, and the forests and wondered what lies beyond. Curiosity drives innovation, asking questions that lead to discoveries, inventions, and new ways of thinking. Every child exploring a garden or a rock is practicing the same impulse that has led to great scientific achievements. Learning begins with observation, and observation begins with wonder.",
+    "llm_path": "./models/llama32-1b.gguf",
+    "system_prompt": "You are a friendly AI",
+    "max_tokens": 8192
+}
